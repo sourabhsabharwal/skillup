@@ -83,6 +83,13 @@ view: recruit_attempts {
     value_format_name: id
     sql: ${TABLE}.tid ;;
   }
+
+  dimension: attempt_duration {
+    type: number
+    sql: datediff('minutes',${TABLE}.starttime,${TABLE}.endtime) ;;
+  }
+
+
   dimension_group: updated {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]

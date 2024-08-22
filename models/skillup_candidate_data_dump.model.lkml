@@ -43,4 +43,19 @@ explore: skillup_candidates_data {
     relationship: one_to_many
     sql_on: ${questions.id} = ${question_skill_tag_mapping.qid} ;;
   }
+
+  join: recruit_tests {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${skillup_candidates_data.test_id} = ${recruit_tests.id} ;;
+  }
+
+  join: recruit_test_feedback {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${recruit_tests.unique_id} = ${recruit_test_feedback.test_hash}
+          and
+          ${recruit_test_feedback.user_email} = ${recruit_attempts.email};;
+  }
+
 }
