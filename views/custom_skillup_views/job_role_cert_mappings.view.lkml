@@ -1,9 +1,9 @@
-view: cert_mappings {
+view: job_role_cert_mappings {
 
     derived_table: {
       sql: select c.id as cert_id, c.name as cert_name, jr.id as role_id, jr.name as role_name, s.id as skill_id, s.name as skill_name, b.skill_id as skill_id_from_badges,
-                    b.proficiency as skill_prof__from_badges, jrs.proficiency as target_prof,
-                    e.platform_company_id as emp_company_id, e.email as dev_email
+                    b.proficiency as achieved_prof, jrs.proficiency as target_prof,
+                    e.platform_company_id as emp_company_id, e.email as email
                     from
                     public.employees e
                     join
@@ -67,9 +67,9 @@ view: cert_mappings {
       sql: ${TABLE}.skill_id_from_badges ;;
     }
 
-    dimension: skill_prof__from_badges {
+    dimension: achieved_prof {
       type: string
-      sql: ${TABLE}.skill_prof__from_badges ;;
+      sql: ${TABLE}.achieved_prof ;;
     }
 
     dimension: target_prof {
@@ -82,9 +82,9 @@ view: cert_mappings {
       sql: ${TABLE}.emp_company_id ;;
     }
 
-    dimension: dev_email {
+    dimension: email {
       type: string
-      sql: ${TABLE}.dev_email ;;
+      sql: ${TABLE}.email ;;
     }
 
     set: detail {
@@ -96,10 +96,10 @@ view: cert_mappings {
         skill_id,
         skill_name,
         skill_id_from_badges,
-        skill_prof__from_badges,
+        achieved_prof,
         target_prof,
         emp_company_id,
-        dev_email
+        email
       ]
     }
   }

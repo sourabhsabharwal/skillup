@@ -19,4 +19,8 @@ include: "/**/*.view.lkml"                 # include all views in this project
 #   }
 # }
 
-explore: cert_mappings {}
+explore: assignments_cert_mapping {}
+
+explore: job_role_cert_mappings {}
+
+explore: cert_pre_req_skill_status_data {}
