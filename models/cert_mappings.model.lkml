@@ -23,4 +23,6 @@ explore: assignments_cert_mapping {}
 
 explore: job_role_cert_mappings {}
 
-explore: cert_pre_req_skill_status_data {}
+explore: assigned_cert_pre_req_skill_status_data {}
+
+explore: job_role_cert_pre_req_skill_status_data {}
