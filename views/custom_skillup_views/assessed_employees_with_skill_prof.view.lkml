@@ -7,7 +7,8 @@ view: assessed_employees_with_skill_prof {
       inner join
       employee_assessments ea
       on e.id = ea.employee_id
-      and e.platform_company_id not in (364822, 327186, 297361, 280588, 280251, 178821, 163391, 118702,280588,271416,371416, 279841,373445,363758)
+      and e.platform_company_id not in --(364822, 327186, 297361, 280588, 280251, 178821, 163391, 118702,280588,271416,371416, 279841,373445,363758)
+      (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
       inner join
       assessments a
       on a.id = ea.assessment_id

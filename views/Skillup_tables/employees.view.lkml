@@ -112,10 +112,10 @@ view: employees {
     sql: ${TABLE}.user_role ;;
   }
 
-  dimension: emp_company {
-    type: string
-    sql: ${recruit_companies.name} ;;
-  }
+  # dimension: emp_company {
+  #   type: string
+  #   sql: ${recruit_companies.name} ;;
+  # }
   measure: count {
     type: count
     drill_fields: [detail*]
@@ -124,7 +124,8 @@ view: employees {
   measure: employee_count {
     type: count_distinct
     sql: ${id} ;;
-    drill_fields: [id,email,platform_company_id,emp_company,created_date,activated_date]
+    drill_fields: [id,email,platform_company_id,created_date,activated_date]
+    # [id,email,platform_company_id,emp_company,created_date,activated_date]
     # drill_fields: [detail*]
   }
 

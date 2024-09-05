@@ -22,7 +22,8 @@ derived_table: {
                           join
                           employees m
                           on m.id = e.manager_id
-                          and e.platform_company_id not in (364822, 327186, 297361, 280588, 280251, 178821, 163391, 118702,280588,271416, 371416)
+                          and e.platform_company_id not in --(364822, 327186, 297361, 280588, 280251, 178821, 163391, 118702,280588,271416, 371416)
+                          (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
                           join
                           recruit_rs_replica.recruit.recruit_companies rc
                           on rc.id = e.platform_company_id  ;;

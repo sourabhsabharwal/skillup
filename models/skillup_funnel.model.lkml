@@ -20,11 +20,12 @@ include: "/**/*.view.lkml"                 # include all views in this project
 # }
 
 explore: employees {
+  always_join: [employee_assessments]
   join: employee_assessments {
     type: left_outer
     relationship: one_to_many
     sql_on: ${employees.id} = ${employee_assessments.employee_id} ;;
-    sql_where: ${employees.platform_company_id} not in (364822, 327186, 297361, 280588, 280251, 178821, 163391, 118702,280588,271416) ;;
+    sql_where: ${employees.platform_company_id} not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841) ;;
   }
 
   join: recruit_companies {
