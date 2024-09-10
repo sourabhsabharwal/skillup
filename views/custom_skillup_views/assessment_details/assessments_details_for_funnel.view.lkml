@@ -1,26 +1,42 @@
-view: practice_assessments_data {
+view: assessments_details_for_funnel {
       derived_table: {
       sql: select a.id as assessment_id, a.recruit_test_id as test_id, a.name as assessment_name, a.type as assessment_type,
-              ra.email as emp_email, e.platform_company_id as company_id, rc.name as company_name,
-              ea.max_score,ea.obtained_score
+              ra.email as emp_email, e.email as email, json_extract_path_text(e.meta, 'onboarding_status' , true) as onboarding_status, ra.id as attempt_id, e.platform_company_id as company_id, rc.name as company_name,
+              ea.max_score,ea.obtained_score, eb.id as emp_badge_id, ec.id as emp_cert_id, ea.id as emp_assessment_id
+
               from
-              assessments a
-              join
-              recruit_rs_replica.recruit.recruit_attempts ra
-              on a.recruit_test_id = abs(ra.tid)
-              and
-              a.type = 'practice'
-              join
               employees e
+
+              left join
+              recruit_rs_replica.recruit.recruit_attempts ra
               on e.email = ra.email
+              and e.platform_user_uuid is not null
+              and e.user_role = 'individual'
               and e.platform_company_id not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
+
+              join
+              assessments a
+              on a.recruit_test_id = abs(ra.tid)
+
               join
               recruit_rs_replica.recruit.recruit_companies rc
               on rc.id = e.platform_company_id
+
               left join
               employee_assessments ea
               on ea.recruit_attempt_id = ra.id
-              and ea.assessment_id = a.id ;;
+              and ea.assessment_id = a.id
+
+              left join
+              employee_badges eb
+              on ea.id = eb.employee_assessment_id
+              and eb.employee_id = ea.employee_id
+
+              left join
+              employee_certifications ec
+              on ea.id = ec.employee_assessment_id
+              and ec.employee_id = ea.employee_id
+              ;;
     }
 
     measure: count {
@@ -33,6 +49,21 @@ view: practice_assessments_data {
       sql: ${TABLE}.assessment_id ;;
     }
 
+  dimension: emp_badge_id {
+    type: number
+    sql: ${TABLE}.emp_badge_id ;;
+  }
+
+  dimension: emp_cert_id {
+    type: number
+    sql: ${TABLE}.emp_cert_id ;;
+  }
+
+  dimension: emp_assessment_id {
+    type: number
+    sql: ${TABLE}.emp_assessment_id ;;
+  }
+
     dimension: test_id {
       type: number
       sql: ${TABLE}.test_id ;;
@@ -43,6 +74,12 @@ view: practice_assessments_data {
       sql: ${TABLE}.assessment_name ;;
     }
 
+
+  dimension: onboarding_status {
+    type: string
+    sql: ${TABLE}.onboarding_status ;;
+  }
+
     dimension: assessment_type {
       type: string
       sql: ${TABLE}.assessment_type ;;
@@ -51,6 +88,17 @@ view: practice_assessments_data {
     dimension: emp_email {
       type: string
       sql: ${TABLE}.emp_email ;;
+    }
+
+
+  dimension: email {
+    type: string
+    sql: ${TABLE}.email ;;
+  }
+
+    dimension: attempt_id {
+      type: number
+      sql: ${TABLE}.attempt_id ;;
     }
 
     dimension: company_id {
@@ -80,10 +128,16 @@ view: practice_assessments_data {
         assessment_name,
         assessment_type,
         emp_email,
+        attempt_id,
         company_id,
         company_name,
         max_score,
-        obtained_score
+        obtained_score,
+        onboarding_status,
+        emp_badge_id,
+        emp_cert_id,
+        email,
+        emp_assessment_id
       ]
     }
   }

@@ -19,8 +19,10 @@ include: "/**/*.view.lkml"                 # include all views in this project
 #   }
 # }
 
-explore: assigned_cert_pre_req_skill_status_data {}
+explore: practice_assessments_data {}
 
-explore: job_role_cert_pre_req_skill_status_data {}
+explore: badging_assessments_data {}
 
-explore: self_assigned_cert_pre_req_skill_status_data {}
+explore: certifying_assessments_data {}
+
+explore: assessments_details_for_funnel {}

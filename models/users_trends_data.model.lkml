@@ -18,7 +18,24 @@ include: "/**/*.view.lkml"                 # include all views in this project
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
+explore: trends_for_active_users {
+  join: registered_users {
+    relationship: many_to_one
+    type: left_outer
+    sql_on: ${registered_users.platform_company_id} =  ${trends_for_active_users.company_id}
+    and ${trends_for_active_users.emp_email} = ${registered_users.email};;
+  }
+}
 
-explore: cert_jobrole_skill_employee_mapping {}
-
-explore: cert_to_pre_req_skill_mapping {}
+explore: employees {
+  join: trends_for_active_users{
+    relationship: one_to_many
+    type: left_outer
+    sql_on: ${trends_for_active_users.emp_email} = ${employees.email} ;;
+  }
+  join: registered_users {
+    relationship: many_to_one
+    type: left_outer
+    sql_on: ${registered_users.platform_company_id} =  ${employees.platform_company_id} ;;
+  }
+}
