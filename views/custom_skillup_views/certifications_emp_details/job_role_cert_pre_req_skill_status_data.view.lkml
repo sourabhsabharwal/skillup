@@ -60,7 +60,7 @@ view: job_role_cert_pre_req_skill_status_data {
                             cert_company not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)) cert_pre_skill_mapping
                             on cert_pre_skill_mapping.cert_id = c.id
 
-                              join
+                              left join
                               public.job_role_skills jrs
                               on jrs.skill_id = cert_pre_skill_mapping.prerequisite_skill_id
                               and jrs.job_role_id = c.job_role_id
