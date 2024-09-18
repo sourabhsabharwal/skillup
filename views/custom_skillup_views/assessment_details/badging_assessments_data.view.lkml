@@ -81,12 +81,12 @@ view: badging_assessments_data {
     }
 
     dimension: max_score {
-      type: string
+      type: number
       sql: ${TABLE}.max_score ;;
     }
 
     dimension: obtained_score {
-      type: string
+      type: number
       sql: ${TABLE}.obtained_score ;;
     }
 
