@@ -1,3 +1,4 @@
+## testing
 view: assessments_details_for_funnel {
       derived_table: {
       sql: select
