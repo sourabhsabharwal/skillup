@@ -39,7 +39,7 @@ view: assigned_cert_pre_req_skill_status_data {
                                   --   public.job_roles jr
                                   --   on jr.id = c.job_role_id
 
-                                    join
+                                  inner join
                                     (with  certification_pre_req_skill_mapping as
                                         (
                                         select

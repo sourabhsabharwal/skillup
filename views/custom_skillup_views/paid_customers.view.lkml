@@ -1,24 +1,29 @@
 view: paid_customers {
     derived_table: {
-      sql: select hrid_c as customer_id, accounts.name as customer_name, amount as ARR, opportunities.service_start_date_c as start_date,
-      opportunities.service_end_date_c as end_date, datediff(days,current_date,end_date ) as contract_pedning_days,
-      hrw_pricing_model_c, funnel_stage_c, next_step,is_closed,account_id,stage_name as customer_stage
-              from
-              hr_analytics.salesforce.accounts
-              join
-              hr_analytics.salesforce.opportunities
-              on accounts.id   = opportunities.account_id
-              where
-              lower(hrw_pricing_model_c) like '%skillup%'
-              and
-              opportunities.is_won ='true'
-              and accounts.is_deleted ='false'
-              and opportunities.is_deleted ='false'
-              -- and
-              -- stage_name like '%Finance Approved & Closed Won%'
-              and
-              accounts.name != 'Sales Ops Test Account 001 - IGNORE AC NAME'
-              and customer_id != 213905;;
+      sql: select
+              hrid_c as customer_id,
+              accounts.name as customer_name,
+              amount as ARR,
+              opportunities.service_start_date_c as start_date,
+              opportunities.service_end_date_c as end_date,
+              datediff(days,current_date,end_date ) as contract_pedning_days,
+              hrw_pricing_model_c,
+              funnel_stage_c,
+              next_step,
+              is_closed,
+              account_id,
+              stage_name as customer_stage
+
+              from hr_analytics.salesforce.accounts
+              join hr_analytics.salesforce.opportunities
+                on accounts.id   = opportunities.account_id
+              where lower(hrw_pricing_model_c) like '%skillup%'
+                and opportunities.is_won ='true'
+                and accounts.is_deleted ='false'
+                and opportunities.is_deleted ='false'
+                -- and stage_name like '%Finance Approved & Closed Won%'
+                and accounts.name != 'Sales Ops Test Account 001 - IGNORE AC NAME'
+                and customer_id != 213905;;
     }
 
    measure: count {
@@ -85,6 +90,19 @@ view: paid_customers {
     type: string
     sql: ${TABLE}.customer_stage ;;
   }
+
+  measure: skillup_ARR {
+    type: sum
+    sql: case
+              when ${contract_pedning_days} > 0
+                and ${arr} is not null
+                and EXTRACT(YEAR FROM CURRENT_DATE) = ${start_date_year}
+              then ${arr}
+              else null
+              end ;;
+  }
+
+
 
   set: detail {
     fields: [

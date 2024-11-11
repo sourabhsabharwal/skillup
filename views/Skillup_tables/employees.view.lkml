@@ -94,10 +94,22 @@ view: employees {
     type: number
     sql: ${TABLE}.recruit_user_id ;;
   }
+
+  ## Modified by ashish on Nov 11 based on breif by Saourabh Maurya
+
   dimension: role {
+    label: "Role Old"
     type: string
     sql: ${TABLE}.role ;;
   }
+
+  dimension: role_new {
+    label: "Role New"
+    type: string
+    sql: ${TABLE}.user_role ;;
+  }
+
+
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
