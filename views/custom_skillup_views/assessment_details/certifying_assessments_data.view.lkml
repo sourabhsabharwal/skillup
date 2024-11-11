@@ -19,7 +19,7 @@ view: certifying_assessments_data {
               recruit_rs_replica.recruit.recruit_companies rc
               on rc.id = e.platform_company_id
               and e.platform_user_uuid is not null
-              and e.user_role = 'individual'
+              and e.user_role in ('individual', 'manager')
               left join
               employee_assessments ea
               on ea.recruit_attempt_id = ra.id
