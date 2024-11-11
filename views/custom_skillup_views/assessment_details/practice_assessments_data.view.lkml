@@ -3,7 +3,7 @@ view: practice_assessments_data {
       sql: select a.id as assessment_id, a.recruit_test_id as test_id, a.name as assessment_name, a.type as assessment_type,
               ra.email as emp_email, ra.id as attempt_id, e.platform_company_id as company_id, rc.name as company_name,
               ea.max_score,ea.obtained_score,
-              case when max_score is null then 0 else 1 end as test_submitted
+              case when ra.status = 7 then 1 else 0 end as test_submitted
               from
               assessments a
               join
