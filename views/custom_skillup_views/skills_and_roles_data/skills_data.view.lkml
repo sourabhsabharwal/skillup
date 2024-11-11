@@ -11,13 +11,13 @@ view: skills_data {
             on e.id = ea.employee_id
             and e.platform_company_id not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
             and e.platform_user_uuid is not null
-            and e.user_role = 'individual'
+            and e.user_role in ('individual', 'manager')
 
             join
             assessments a
             on a.id = ea.assessment_id
             and
-            a.type != 'practice' and a.type != 'certifying'
+            a.type = 'badging'
 
             join
             assessment_skills ask
