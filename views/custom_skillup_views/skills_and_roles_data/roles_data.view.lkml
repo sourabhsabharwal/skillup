@@ -9,27 +9,24 @@ view: roles_data {
                           inner join
                           employee_assessments ea
                           on e.id = ea.employee_id
+                          and ea.status = 'evaluated'
                           and e.platform_company_id not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
                           and e.platform_user_uuid is not null
-                          and e.user_role = 'individual'
-
+                          and e.user_role in ('individual', 'manager')
                           join
                           assessments a
-
+                          on a.id = ea.assessment_id
+                          and a.type = 'certifying'
                           join
                           certifications c1
                           on c1.assessment_id = a.id
-
                           join
                           job_roles jr1
                           on jr1.id = c1.job_role_id
-
-                          on a.id = ea.assessment_id
-                          and
-                          a.type != 'practice' and a.type != 'badging'
                           left join
                           public.employee_certifications ec
                           on ea.id = ec.employee_assessment_id
+                          and ec.active = 'true'
                           left join
                           public.certifications c
                           on c.id = ec. certification_id
