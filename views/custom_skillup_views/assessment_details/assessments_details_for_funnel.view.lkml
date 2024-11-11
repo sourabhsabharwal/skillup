@@ -28,7 +28,7 @@ inner join recruit_rs_replica.recruit.recruit_companies rc
 left join  recruit_rs_replica.recruit.recruit_attempts ra
               on e.email = ra.email
               and e.platform_user_uuid is not null
-              and e.user_role = 'individual'
+              and e.user_role in ('individual', 'manager')
               and e.platform_company_id not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
 
 inner join assessments a
@@ -42,10 +42,12 @@ left join   employee_assessments ea
 left join   employee_badges eb
               on ea.id = eb.employee_assessment_id
               and eb.employee_id = ea.employee_id
+              and eb.active = 'true'
 
 left join   employee_certifications ec
               on ea.id = ec.employee_assessment_id
               and ec.employee_id = ea.employee_id
+              and ec.active = 'true'
 
 ;;
     }
