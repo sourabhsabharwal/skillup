@@ -26,7 +26,8 @@ view: badging_assessments_data {
               left join
               employee_badges eb
               on ea.id = eb.employee_assessment_id
-              and eb.employee_id = ea.employee_id ;;
+              and eb.employee_id = ea.employee_id
+              and eb.active = 'true';;
     }
 
     measure: count {
