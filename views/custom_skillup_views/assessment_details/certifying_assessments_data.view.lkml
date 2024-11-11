@@ -27,7 +27,7 @@ view: certifying_assessments_data {
               left join
               employee_certifications ec
               on ea.id = ec.employee_assessment_id
-              and ec.employee_id = ea.employee_id ;;
+              and ec.employee_id = ea.employee_id and ec.active = 'true' ;;
     }
 
     measure: count {
