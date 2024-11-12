@@ -10,6 +10,7 @@ ra.email as emp_email,
 e.email as email,
 json_extract_path_text(e.meta, 'onboarding_status' , true) as onboarding_status,
 ra.id as attempt_id,
+ra.status as attempt_status,
 e.platform_company_id as company_id,
 rc.name as company_name,
 ea.max_score,
@@ -20,20 +21,19 @@ ec.id as emp_cert_id,
 ec.issued_at as emp_cert_issued_at,
 ea.id as emp_assessment_id
 
-from employees e
+from assessments a
 
-inner join recruit_rs_replica.recruit.recruit_companies rc
-              on rc.id = e.platform_company_id
-              and e.platform_company_id not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
+inner join  recruit_rs_replica.recruit.recruit_attempts ra
+              on a.recruit_test_id = abs(ra.tid)
 
-left join  recruit_rs_replica.recruit.recruit_attempts ra
+right join employees e
               on e.email = ra.email
               and e.platform_user_uuid is not null
               and e.user_role in ('individual', 'manager')
+              and e.platform_company_id not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
 
-inner join assessments a
-              on a.recruit_test_id = abs(ra.tid)
-
+inner join recruit_rs_replica.recruit.recruit_companies rc
+              on rc.id = e.platform_company_id
 
 left join   employee_assessments ea
               on ea.recruit_attempt_id = ra.id
@@ -76,6 +76,11 @@ left join   employee_certifications ec
   dimension: emp_cert_id {
     type: number
     sql: ${TABLE}.emp_cert_id ;;
+  }
+
+  dimension: attempt_status {
+    type: number
+    sql: ${TABLE}.attempt_status ;;
   }
 
   dimension_group: emp_cert_issued_at {
@@ -198,6 +203,7 @@ left join   employee_certifications ec
         assessment_type,
         emp_email,
         attempt_id,
+        attempt_status,
         company_id,
         company_name,
         max_score,
