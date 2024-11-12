@@ -30,10 +30,10 @@ right join employees e
               on e.email = ra.email
               and e.platform_user_uuid is not null
               and e.user_role in ('individual', 'manager')
-              and e.platform_company_id not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
 
 inner join recruit_rs_replica.recruit.recruit_companies rc
               on rc.id = e.platform_company_id
+              and e.platform_company_id not in (371416, 364822, 327186, 297361, 280588, 280251, 279841, 178821, 163391, 118702, 0, 279841)
 
 left join   employee_assessments ea
               on ea.recruit_attempt_id = ra.id
