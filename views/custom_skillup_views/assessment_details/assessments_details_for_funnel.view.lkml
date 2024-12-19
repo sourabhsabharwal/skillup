@@ -1,25 +1,34 @@
 ## testing
+
+#### chnages made to the derived SQL by Ashish
+#### changed were made on Dec 18, 2024
+#### changes were made to include timestamps for all the employeee activites
 view: assessments_details_for_funnel {
       derived_table: {
       sql: select
-a.recruit_test_id as test_id,
-a.id as assessment_id,
-a.name as assessment_name,
-a.type as assessment_type,
-ra.email as emp_email,
-e.email as email,
-json_extract_path_text(e.meta, 'onboarding_status' , true) as onboarding_status,
-ra.id as attempt_id,
-ra.status as attempt_status,
-e.platform_company_id as company_id,
-rc.name as company_name,
-ea.max_score,
-ea.obtained_score,
-eb.id as emp_badge_id,
-eb.issued_at as emp_badge_issued_at,
-ec.id as emp_cert_id,
-ec.issued_at as emp_cert_issued_at,
-ea.id as emp_assessment_id
+  a.recruit_test_id as test_id,
+  a.id as assessment_id,
+  a.name as assessment_name,
+  a.type as assessment_type,
+  ra.email as emp_email,
+  e.email as email,
+  e.created_at as employee_invited_at,
+  json_extract_path_text(e.meta, 'onboarding_status' , true) as onboarding_status,
+  case when onboarding_status = 'homepage_animation_completed' then e.activated_at end as emp_onboarded_at,
+  ra.id as attempt_id,
+  ra.starttime as attempt_started_at,
+  ra.endtime as attempt_ended_at,
+  ra.status as attempt_status,
+  case when a.type = 'practise' then ra.endtime end as practise_attempt_ended_at,
+  e.platform_company_id as company_id,
+  rc.name as company_name,
+  ea.max_score,
+  ea.obtained_score,
+  eb.id as emp_badge_id,
+  eb.issued_at as emp_badge_issued_at,
+  ec.id as emp_cert_id,
+  ec.issued_at as emp_cert_issued_at,
+  ea.id as emp_assessment_id
 
 from assessments a
 
@@ -194,6 +203,70 @@ left join   employee_certifications ec
       type: string
       sql: ${TABLE}.obtained_score ;;
     }
+
+## Added by Ashish
+## Added on Dec 18, 2024
+## timestamps
+
+  dimension_group: employee_invited {
+    group_label: "Employee Activites Timestamps"
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.employee_invited_at ;;
+    description: "We are using created_at field from employees table as a proxy for invited_at"
+  }
+
+  dimension_group: emp_onboarded {
+    group_label: "Employee Activites Timestamps"
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.emp_onboarded_at ;;
+    description: "We are using activated_at field from employees table for cases where onboarding_status = 'homepage_animation_completed' as a proxy for onboarded_at"
+  }
+
+  dimension_group: employee_practise_attempt_started_at {
+    group_label: "Employee Activites Timestamps"
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: case when ${assessment_type} = 'practice' then ${TABLE}.attempt_started_at end;;
+    description: "We are using starttime field from recruit_attempts table as a proxy for practise_attempt_started_at"
+  }
+
+  dimension_group: employee_badging_attempt_started_at {
+    group_label: "Employee Activites Timestamps"
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: case when ${assessment_type} = 'badging' then ${TABLE}.attempt_started_at end;;
+    description: "We are using starttime field from recruit_attempts table as a proxy for badging_attempt_started_at"
+  }
+
+  dimension_group: employee_certifying_attempt_started_at {
+    group_label: "Employee Activites Timestamps"
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: case when ${assessment_type} = 'certifying' then ${TABLE}.attempt_started_at end;;
+    description: "We are using starttime field from recruit_attempts table as a proxy for certifying_attempt_started_at"
+  }
+
+  dimension_group: employee_practise_attempt_ended_at {
+    group_label: "Employee Activites Timestamps"
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.practise_attempt_ended_at;;
+    description: "We are using endtime field from recruit_attempts table as a proxy for practise_attempt_ended_at"
+  }
+
+
+  dimension_group: emp_activity {
+    group_label: "Employee Activites Timestamps"
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: coalesce(${TABLE}.employee_invited_at, ${TABLE}.emp_onboarded_at,${TABLE}.attempt_started_at,${TABLE}.attempt_ended_at , ${TABLE}.emp_badge_issued_at,${TABLE}.emp_cert_issued_at);;
+    description: "use this for checking if employee has anykind of activity on a particular"
+  }
+
+
+
 
     set: detail {
       fields: [

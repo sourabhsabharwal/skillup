@@ -49,3 +49,5 @@ explore: employees {
     sql_on: ${employee_assessments.id} = ${employee_certifications.employee_assessment_id} ;;
   }
 }
+
+explore: assessments_details_for_funnel_timestamps {}
