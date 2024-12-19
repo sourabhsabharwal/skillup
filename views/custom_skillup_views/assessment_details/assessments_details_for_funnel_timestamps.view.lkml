@@ -411,7 +411,7 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13
     drill_fields: [detail*]
   }
 
-  measure: 4_count_emp_took_practice_assessments {
+  measure: 4_count_emp_submitted_practice_assessments {
     group_label: "Employee Counts"
     type: count_distinct
     sql: case when activity_seq_num=4 then ${employee_id} end;;
